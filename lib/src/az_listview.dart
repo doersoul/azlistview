@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'az_common.dart';
@@ -24,7 +25,7 @@ class AzListView extends StatefulWidget {
     this.indexBarWidth = kIndexBarWidth,
     this.indexBarHeight,
     this.indexBarItemHeight = kIndexBarItemHeight,
-    this.hapticFeedback = false,
+    this.hapticFeedback = true,
     this.indexBarAlignment = Alignment.centerRight,
     this.indexBarMargin,
     this.indexBarOptions = const IndexBarOptions(),
@@ -154,6 +155,10 @@ class _AzListViewState extends State<AzListView> {
     String tag = details.tag!;
     if (details.action == IndexBarDragDetails.actionDown ||
         details.action == IndexBarDragDetails.actionUpdate) {
+      if (widget.hapticFeedback) {
+        HapticFeedback.lightImpact();
+      }
+
       selectTag = tag;
       _scrollTopIndex(tag);
     }
@@ -165,10 +170,12 @@ class _AzListViewState extends State<AzListView> {
     if (positions.isNotEmpty) {
       ItemPosition itemPosition = positions
           .where((ItemPosition position) => position.itemTrailingEdge > 0)
-          .reduce((ItemPosition min, ItemPosition position) =>
-              position.itemTrailingEdge < min.itemTrailingEdge
-                  ? position
-                  : min);
+          .reduce(
+            (ItemPosition min, ItemPosition position) =>
+                position.itemTrailingEdge < min.itemTrailingEdge
+                    ? position
+                    : min,
+          );
       int index = itemPosition.index;
       String tag = widget.data[index].getSuspensionTag();
       if (selectTag != tag) {
