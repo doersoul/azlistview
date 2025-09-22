@@ -25,7 +25,7 @@ class AzListView extends StatefulWidget {
     this.indexBarWidth = kIndexBarWidth,
     this.indexBarHeight,
     this.indexBarItemHeight = kIndexBarItemHeight,
-    this.hapticFeedback = true,
+    this.hapticFeedback = HapticFeedback.mediumImpact,
     this.indexBarAlignment = Alignment.centerRight,
     this.indexBarMargin,
     this.indexBarOptions = const IndexBarOptions(),
@@ -83,7 +83,7 @@ class AzListView extends StatefulWidget {
   final double indexBarItemHeight;
 
   /// Haptic feedback.
-  final bool hapticFeedback;
+  final VoidCallback? hapticFeedback;
 
   /// IndexBar alignment.
   final AlignmentGeometry indexBarAlignment;
@@ -155,9 +155,7 @@ class _AzListViewState extends State<AzListView> {
     String tag = details.tag!;
     if (details.action == IndexBarDragDetails.actionDown ||
         details.action == IndexBarDragDetails.actionUpdate) {
-      if (widget.hapticFeedback) {
-        HapticFeedback.lightImpact();
-      }
+      widget.hapticFeedback?.call();
 
       selectTag = tag;
       _scrollTopIndex(tag);
@@ -170,12 +168,10 @@ class _AzListViewState extends State<AzListView> {
     if (positions.isNotEmpty) {
       ItemPosition itemPosition = positions
           .where((ItemPosition position) => position.itemTrailingEdge > 0)
-          .reduce(
-            (ItemPosition min, ItemPosition position) =>
-                position.itemTrailingEdge < min.itemTrailingEdge
-                    ? position
-                    : min,
-          );
+          .reduce((ItemPosition min, ItemPosition position) =>
+              position.itemTrailingEdge < min.itemTrailingEdge
+                  ? position
+                  : min);
       int index = itemPosition.index;
       String tag = widget.data[index].getSuspensionTag();
       if (selectTag != tag) {
