@@ -25,7 +25,7 @@ class AzListView extends StatefulWidget {
     this.indexBarWidth = kIndexBarWidth,
     this.indexBarHeight,
     this.indexBarItemHeight = kIndexBarItemHeight,
-    this.hapticFeedback = HapticFeedback.mediumImpact,
+    this.hapticFeedback = HapticFeedback.lightImpact,
     this.indexBarAlignment = Alignment.centerRight,
     this.indexBarMargin,
     this.indexBarOptions = const IndexBarOptions(),
